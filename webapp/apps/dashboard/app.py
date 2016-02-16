@@ -21,6 +21,7 @@ class DashboardApplication(da):
             url(r'^$', permission_required(['dashboard_admin','ISP'])(self.index_view.as_view()), name='index'),
             url(r'^ad/', include(self.ad_app.urls)),
             url(r'^permission/', include(self.permission_app.urls)),
+            url(r'^catalogue/', include(self.catalogue_app.urls)),
 
             url(r'^login/$', self.login_view.as_view(), name='dashboard-login'),
             url(r'^logout/$', self.logout_view.as_view(), name='dashboard-logout'),

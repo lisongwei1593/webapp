@@ -96,26 +96,7 @@
         </div>
     </div>
     <ul class="banner-top l">
-        <li>
-            <a href="{% url 'promotions:brandgather_product' %}">品牌汇</a>
-        </li>
-        <li>
-            <a href="{% url 'promotions:today_new_view' %}">新品汇</a>
-        </li>
-        <li style="float:left;background-image: none;font-size:16px;border-right:none">
-            <a href="{% url 'helper:helper_index' %}" style="text-decoration: none;">蓝图学院</a>
-        </li>
         <li class="last-child"> 
-               <div class="open fix">
-                <div class="l">
-                    {% if open_or_close %}
-                    <img src="{% static 'images/open.png' %}"/>
-                    {% else %}
-                    <img src="{%static 'images/close.png' %}"/>
-		            {% endif %}
-                </div>
-                <marquee class="l"scrolldelay="150" direction="left">{{open_close_msg}}</marquee>
-              </div>
         </li>
     </ul>
 </div>
@@ -187,85 +168,14 @@
             </div>
         </div>
 <!--首页-content-body-start-->
-     <div class="container">
-            <!--广告展示-->
-            <div class="Newad-goods fix">
-             {% for ad in index_ad_list %}
-                <div class="Newad-goods-img">
-                 {% with image=ad.image %}
-                            {% thumbnail image "390x150" crop="center" as thumb %}
-                            <a href={{ad.link_url}}>
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                            {% endwith %}
-                    {% if forloop.first %}
-                    <div class="fresh">
-                        <img src="{%static 'images/new.png' %}"/>
-                    </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            </div>
-        </div>
 <div class="container">
-	<div class="plate">
-		<!--口碑甄选 start-->
-			<div class="plate-koubei-title fix">
-				<img src="{% static 'images/koubei.png' %}" />
-			</div>
-			<div class="row fix">
-				{% for product in reputation_list%}
-				{% if forloop.counter == 2 %}
-				<div class="adBig">
-				 {% with image=koubei_ad_list.image %}
-                            {% thumbnail image "399x290" crop="center" as thumb %}
-                            <a href={{koubei_ad_list.link_url}}>
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                 {% endwith %}
-                </div>
-				{% else %}
-				<div class="plate-box">
-				{% with image=product.primary_image %}
-                {% thumbnail image.original "180x180" crop="center" as thumb %}
-                   <a href="{{ product.get_absolute_url }}">
-                   <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
-                   </a>
-                {% endthumbnail %}
-                {% endwith %}
-					<div class="plate-box-des">
-						<a href="{{ product.get_absolute_url }}">{{product}}</a>
-					</div>
-					<div class="plate-box-p">
-						<span>￥{{ product.stockrecords.first.price_retail }}</span>
-						<del>￥{{ product.stockrecords.first.price_retail }}</del>
-					</div>
-				</div>
-				{% endif %}
-				{% endfor %}
-			</div>
-		</div>
-
 		<div class="plate plate-one fix">
 			<div class="plate-title fix">
 				<h2>
-					<span>1F</span>新品上市
+					<span></span>商品
 				</h2>
 			</div>
 			<div class="row fix">
-				<div class="plate-db-box">
-					{% if ad_product %} 
-					{% with image=ad_product.advertising_long_image %}
-                            {% thumbnail image "275x610" crop="center" as thumb %}
-                            <a href="{{ad_product.get_absolute_url}}">
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                            {% endwith %}
-					{% endif %}
-				</div>
 				{% for product in new_product_list%}
 				<div class="plate-box">
 				{% with image=product.primary_image %}
@@ -297,96 +207,6 @@
                  {% endwith %}
             </div>
   <!--广告展示end-->
-		<div class="plate plate-one fix">
-			<div class="plate-title fix">
-				<h2>
-					<span>2F</span>主推热卖
-				</h2>
-			</div>
-			<div class="row fix">
-				<div class="plate-db-box">
-					{% if highly_recommended_product_first %}
-					{% with image=highly_recommended_product_first.advertising_long_image %}
-                            {% thumbnail image "275x610" crop="center" as thumb %}
-                            <a href={{highly_recommended_product_first.get_absolute_url}}>
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                            {% endwith %}
-					{% endif %}
-				</div>
-
-				{% for product in highly_recommended_product_list%}
-				<div class="plate-box">
-				{% with image=product.primary_image %}
-                {% thumbnail image.original "180x180" crop="center" as thumb %}
-                   <a href="{{ product.get_absolute_url }}">
-                   <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
-                   </a>
-                {% endthumbnail %}
-                {% endwith %}
-					<div class="plate-box-des">
-						<a href="{{ product.get_absolute_url }}">{{product}}</a>
-					</div>
-					<div class="plate-box-p">
-						<span>￥{{ product.stockrecords.first.price_retail }}</span>
-						<del>￥{{ product.stockrecords.first.price_retail }}</del>
-					</div>
-				</div>
-				{% endfor %}
-			</div>
-		</div>
-  <!--广告展示start-->
-            <div class="nav-ad">
-                {% with image=huore_ad_list.image %}
-                            {% thumbnail image "1200x90" crop="center" as thumb %}
-                            <a href={{koubei_ad_list.link_url}}>
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                 {% endwith %}
-            </div>
-  <!--广告展示end-->
-		<div class="plate plate-one fix">
-			<div class="plate-title fix">
-				<h2>
-					<span>3F</span>火热促销
-				</h2>
-			</div>
-			<div class="row fix">
-				<div class="plate-db-box">
-					{% if hotdeals_product %}
-					{% with image=hotdeals_product.advertising_long_image %}
-                            {% thumbnail image "275x610" crop="center" as thumb %}
-                            <a href={{hotdeals_product.get_absolute_url}}>
-                            <img class="thumbnail" src="{{ thumb.url }}" alt=""/>
-                            </a>
-                            {% endthumbnail %}
-                            {% endwith %}
-					{% endif %}
-				</div>
-
-				{% for product in hotdeals_product_list%}
-				<div class="plate-box">
-				{% with image=product.primary_image %}
-                {% thumbnail image.original "180x180" crop="center" as thumb %}
-                   <a href="{{ product.get_absolute_url }}">
-                   <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
-                   </a>
-                {% endthumbnail %}
-                {% endwith %}
-
-					<div class="plate-box-des">
-						<a href="{{ product.get_absolute_url }}">{{product}}</a>
-					</div>
-					<div class="plate-box-p">
-						<span>￥{{ product.stockrecords.first.price_retail }}</span>
-						<del>￥{{ product.stockrecords.first.price_retail }}</del>
-					</div>
-				</div>
-				{% endfor %}
-			</div>
-		</div>
     </div>
 
 	{% endblock %}

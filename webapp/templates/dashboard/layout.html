@@ -72,6 +72,55 @@
         </div><!-- /navbar-inner -->
     </nav><!-- /navbar -->
     {% endblock navbar %}
+    <!--
+    {% block dashboard_nav %}
+        {% dashboard_navigation user as nav_items %}
+
+        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
+            <div class="container-fluid dashboard">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="collapse navbar-collapse nav-primary">
+                    <ul class="nav navbar-nav dashboard">
+                        {% for item in nav_items %}
+                        <li class="dropdown">
+                            {% if item.is_heading %}
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+                                {{ item.label }} <b class="caret"></b>
+                            </a>
+                            {% else %}
+                            <a href="{{ item.url }}">
+                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+                                {{ item.label }}
+                            </a>
+                            {% endif %}
+                            {% if item.has_children %}
+                            <ul class="dropdown-menu">
+                                {% for subitem in item.children %}
+                                <li>
+                                    <a href="{{ subitem.url }}">
+                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
+                                    {{ subitem.label }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+    -->
 
     <div class="container-fluid dashboard">
         {% dashboard_navigation user as nav_items %}
@@ -81,6 +130,18 @@
                     {% if user.userprofile.is_dashboard_admin %}
                         <li class="dropdown" style="padding-left:10px;padding-top:12px;">
                             <h4>平台管理</h4>
+                        </li>
+                    {% elif user.userprofile.is_isp %}
+                        <li class="dropdown" style="padding-left:10px;padding-top:12px;">
+                            <h4>交易商功能</h4>
+                        </li>
+                    {% elif user.userprofile.is_warehouse_staff %}
+                        <li class="dropdown" style="padding-left:10px;padding-top:12px;">
+                            <h4>自提点功能</h4>
+                        </li>
+                    {% elif user.userprofile.is_member_unit or user.userprofile.is_trader %}
+                        <li class="dropdown" style="padding-left:10px;padding-top:12px;">
+                            <h4>会员单位功能</h4>
                         </li>
                     {% endif %}
                     {% for item in nav_items %}
@@ -100,7 +161,7 @@
                                 <ul class="dropdown-menu">
                                     {% for subitem in item.children %}
                                         <li>
-                                            <a href="sdf">
+                                            <a href="{{ subitem.url }}">
                                                 {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
                                                 {{ subitem.label }}
                                             </a>
@@ -111,7 +172,7 @@
                             {% if item.label == '自提点管理' %}
                                 {% if user.userprofile.is_dashboard_admin %}
                                     <li class="dropdown" style="padding-left:10px;padding-top:12px;">
-                                        <h4>会员单位功能vv</h4>
+                                        <h4>会员单位功能</h4>
                                     </li>
                                 {% endif %}
                             {% elif item.label == '用户查询' %}

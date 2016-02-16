@@ -150,16 +150,18 @@
     *margin-top: -470px;
 }
 .instruction-a{
-    background: url("../images/index_03.png");
     width: 210px;
     height: 45px;
+    background-color: orange;
     margin-bottom: 10px;
 }
 .instruction-a a{
     color: #fffefe;
-    margin-top: 16px;
-    margin-left: 48px;
+    margin-top: 13px;
+    margin-left: 73px;
+    font-size: 20px;
 }
+
 .instruction-a a:first-child{
     position: relative;
     left: -6px;

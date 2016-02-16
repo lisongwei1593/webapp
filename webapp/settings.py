@@ -264,10 +264,6 @@ PERMISSION_URL_DICT = {
 OSCAR_DASHBOARD_NAVIGATION = [
     # dashboard_admin
     {
-        'label': _(u'平台管理'),
-        'url_name': 'dashboard:index',
-    },
-    {
         'label': _(u'商品管理'),
         'children': [
             {
@@ -287,10 +283,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
     {
         'label': _(u'权限管理'),
         'children': [
-            {
-                'label': _(u'用户管理'),
-                'url_name': 'dashboard:user-list',
-            },
             {
                 'label': _(u'用户权限配置'),
                 'url_name': 'dashboard:user-list',

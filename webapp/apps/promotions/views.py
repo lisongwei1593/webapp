@@ -42,31 +42,9 @@ class HomeView(CoreHomeView):
             open_close_msg = u"闭市(%s-次日%s)"%(close_time,open_time)
             ctx['open_or_close'] = False
         ctx['open_close_msg'] = open_close_msg
-        ad_product_list = Product.objects.filter(new_listing=True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date() ).exclude(product_long_image='').exclude(product_long_image__isnull=True).distinct().order_by('-date_updated')
-        ad_product = ad_product_list.first()
-        new_product_list = []
-        hotdeals_product_list = []
-        if ad_product:
-            new_product_list = Product.objects.filter(new_listing=True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).exclude(id=ad_product.id).order_by('-date_updated')[:8]
-        else:
-            new_product_list = Product.objects.filter(new_listing=True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:8]
-        hotdeals_product = Product.objects.filter(hot_deals= True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).exclude(product_long_image='').exclude(product_long_image__isnull=True).distinct().order_by('-date_updated').first()
-        if hotdeals_product:
-            hotdeals_product_list = Product.objects.filter(hot_deals = True,is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).exclude(pk = hotdeals_product.pk).order_by('-date_updated')[:8]
-        else:
-            hotdeals_product_list = Product.objects.filter(hot_deals = True,is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:8]
+        new_product_list = Product.objects.filter(is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:10]
         ##shuiji
         reputation_list = Product.objects.filter(selection_reputation = True,is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:11]
-
-        #主推热卖  by lwj start
-        p = Product.objects.filter(featured_hot=True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).exclude(product_long_image='').exclude(product_long_image__isnull=True).order_by('-date_updated').first()
-        ctx['highly_recommended_product_first'] = p
-        f = Product.objects.filter(featured_hot=True,is_on_shelves=True,opening_date__lte=datetime.datetime.now().date())
-        if p:
-            f = f.exclude(pk=p.pk)
-        f = f.order_by('-date_updated')[:8]
-        ctx['highly_recommended_product_list'] = f
-        ##主推热卖  end
 
         #新品上市消息
         ctx['news_product'] = FlatPage.objects.filter(category=3).order_by('-created_datetime')[:7]
@@ -77,17 +55,12 @@ class HomeView(CoreHomeView):
 
         category_list = Category.objects.filter(depth=1).order_by('path')[:10]
         
-        ctx['hotdeals_product'] = hotdeals_product
-        ctx['hotdeals_product_list'] = hotdeals_product_list
         ctx['new_product_list'] = new_product_list
-        ctx['ad_product'] = ad_product
 
         ctx['reputation_list'] = reputation_list
         ctx['category_list'] = category_list
         ad_list = RollingAd.objects.filter(valid=True)
         ctx['rolling_ad_list'] = ad_list.filter(position='home_ad') # 轮播广告 by lwj 修改：包括页面其它广告
-        ctx['index_ad_list'] = ad_list.filter(position = 'home_ad_1').order_by('order_num')#首页广告
-        ctx['koubei_ad_list'] = ad_list.filter(position = 'home_ad_2').first()
         ctx['zhutui_ad_list'] = ad_list.filter(position = 'home_ad_3').first()
         ctx['huore_ad_list'] = ad_list.filter(position = 'home_ad_4').first()
         
@@ -153,41 +126,6 @@ class NewsProductDetailView(TemplateView):
             pass
         return ctx
     
-def tend_view(request,pid):
-    chartdata = []
-    jsondata = {}
-    tradedata = []
-    product = Product.objects.get(id=pid)
-    today = datetime.datetime.now().date()
-    start_day = today + datetime.timedelta(days=-13)
-    commission_data = {"high_price":today_high_price,"low_price":today_low_price,"commission_buy_price":max_commission_buy_price,"commission_sale_price":min_commission_sale_price,"commission_buy_num":high_price_uncomplete_buy_num,"commission_sale_num":low_price_uncomplete_sale_num}
-    
-    for stock_ticker in all_stock_ticker:
-        name = stock_ticker.created_date.strftime("%Y-%m-%d") 
-        trade_complete_num = TradeComplete.objects.filter(product=product,created_date=stock_ticker.created_date).aggregate(Sum('quantity')).get('quantity__sum')
-        trade_data = [name,trade_complete_num]
-        tradedata.append(trade_data)
-        if stock_ticker.strike_price:
-            price = float(stock_ticker.strike_price)
-            high_price = stock_ticker.high
-            low_price = stock_ticker.low
-        else:
-            last_trade_complete = TradeComplete.objects.filter(product=product,created_date__lte=stock_ticker.created_date).order_by('-created_datetime')[:1].first()
-            if last_trade_complete:
-                price = float(last_trade_complete.unit_price)
-                high_price = float(last_trade_complete.unit_price)
-                low_price = float(last_trade_complete.unit_price)
-            else:
-                product_config = StockProductConfig.objects.get(product=product)
-                price = float(product_config.opening_price)
-                high_price = float(product_config.opening_price)
-                low_price = float(product_config.opening_price)
-        onedata = [name,price]
-        chartdata.append(onedata)
-        jsondata[name] = {"max":high_price,"min":low_price,"price":price}
-    data = {"chartdata":chartdata,"jsondata":jsondata,"tradedata":tradedata,"commission_data":commission_data}
-    return HttpResponse(json.dumps(data),content_type = "application/json")
-
 
 #品牌汇
 class BrandGatherView(TemplateView):
