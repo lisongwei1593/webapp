@@ -1,0 +1,9 @@
+/__init__.pyc
+/admin.pyc
+/common_const.pyc
+/forms.pyc
+/models.pyc
+/real_name_auth_views.pyc
+/urls.pyc
+/utils.pyc
+/views.pyc

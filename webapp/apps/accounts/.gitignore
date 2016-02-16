@@ -1,0 +1,8 @@
+/__init__.pyc
+/admin.pyc
+/forms.pyc
+/models.pyc
+/role_validate.pyc
+/urls.pyc
+/views.pyc
+/decorators.pyc

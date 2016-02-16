@@ -1,0 +1,60 @@
+    <div class="p-title">订单详情<span class="p-close">×</span></div>
+    <div class="OrderManagement">
+        <div>
+            <h4>收货人信息</h4>
+            <div class="Receiver-infor fix">
+                <div class="Receiver-left">
+                    <span>收货人：</span>
+                </div>
+                <div class="Receiver-right">
+                    <span>{{order.receive_addr.consignee}}</span>
+                </div>
+            </div>
+            <div class="Receiver-infor fix">
+                <div class="Receiver-left">
+                    <span>地址：</span>
+                </div>
+                <div class="Receiver-right">
+                    <span>{{order.receive_addr.address}}</span>
+                </div>
+            </div>
+            <div class="Receiver-infor fix">
+                <div class="Receiver-left">
+                    <span>手机号码：</span>
+                </div>
+                <div class="Receiver-right">
+                    <span>{{order.receive_addr.mobile_phone|slice:":3"}}****{{order.receive_addr.mobile_phone|slice:"7:"}}</span>
+                </div>
+            </div>
+            <div class="Receiver-infor fix">
+                <div class="Receiver-left">
+                    <span>电子邮件：</span>
+                </div>
+                <div class="Receiver-right">
+                    <span>{% if order.receive_addr.email %}{{order.receive_addr.email|slice:":2"}}***@***{% else %}-{% endif %}</span>
+                </div>
+            </div>
+        </div>
+        <div class="orderList">
+            <h4>商品详情</h4>
+            {% for info in all_info %}
+            <div class="orderTitle fix">
+                <div class="Goods OrderName">商品名称<span>|</span></div>
+                <div class="Goods OrderPrice">价格<span>|</span></div>
+                <div class="Goods OrderNumber">数量<span>|</span></div>
+                <div class="Goods OrderState">状态<span>|</span></div>
+                <div class="Goods Orderlogistics-com">物流公司<span>|</span></div>
+                <div class="Goods Orderlogistics-num">物流单号</div>
+            </div>
+            <div class="orderContent">
+                <div class="orderContent-p fix">
+                    <div class="Goods OrderName">参冠单冻即食海参参冠单冻即食海参参冠单冻即食海参参冠单冻即食海参参冠单冻即食海参参冠单冻即食海参</div>
+                    <div class="Goods OrderPrice">147.52</div>
+                    <div class="Goods OrderNumber">2 </div>
+                    <div class="Goods OrderState">完成交易</div>
+                    <div class="Goods Orderlogistics-com">圆通快递</div>
+                    <div class="Goods Orderlogistics-num">1005478414</div>
+                </div>
+            </div>
+        </div>
+    </div>

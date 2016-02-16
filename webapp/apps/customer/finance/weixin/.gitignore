@@ -1,0 +1,8 @@
+/__init__.pyc
+/common_const.pyc
+/log.pyc
+/notify.pyc
+/urls.pyc
+/utils.pyc
+/views.pyc
+/wx_pay_api.pyc
