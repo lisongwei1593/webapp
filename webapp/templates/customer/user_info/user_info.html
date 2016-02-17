@@ -165,7 +165,7 @@
                                 <option></option>
                                 {% for c in region.cities %}
                                     <option value="{{ c.id }}" {% if user_info.city_id and c.id == user_info.city_id %}selected = "selected" {% endif %}>
-                                        {{ c.name }}
+                                        {{ c.name }} {{c.id}}
                                     </option>
                                 {% endfor %}
 
@@ -173,11 +173,6 @@
                             <select style="margin-right: 20px;" id="id_district" name="district_id">
                                 <option></option>
                                 {% for d in region.districts %}
-                                    {% if forloop.first %}
-                                        <option value="{{ user_info.region }}" selected = "selected" >
-                                            {{  user_info.region }}{{  user_info.region }}
-                                        </option>
-                                    {% endif %}
                                     <option value="{{ d.id }}" {% if user_info.district_id and d.id == user_info.district_id %}selected = "selected" {% endif %}>
                                        {{ d.name }}
                                     </option>
@@ -274,8 +269,6 @@
                 data: {'city_id': city_id},
                 url: "{% url 'customer:get_location' %}",
                 success: function (data) {
-                    $('#id_city option[selected]').html('');
-
                     var district_options = $('#id_district option');
                     var id_district = $('#id_district')
                     var districts = data.districts;
