@@ -1,32 +1,25 @@
 # -*- coding: utf-8 -*-s
 
 
-import os
-import time
 import datetime
 import random
 import requests
 import hashlib
 import re
 import traceback
-import json
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
 
 from rest_framework.views import APIView
-from rest_framework import permissions, status, serializers
+from rest_framework import permissions
 from rest_framework.response import Response
 
-from django.http.response import HttpResponse
-from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from django.conf import settings
-from django.core.files import File
-from django.db.models import Q,Sum
 from oscar.core.loading import get_model
 
 
@@ -47,7 +40,6 @@ Line = get_model('basket', 'Line')
 Partner = get_model('partner', 'Partner')
 ProductOrder = get_model('commission', 'ProductOrder')
 OrderInfo = get_model('commission', 'OrderInfo')
-SystemConfig = get_model('commission', 'SystemConfig')
 app_secret_key = getattr(settings, 'APP_SECRET_KEY', 'aeb11af7b1750854cb6217cf33e1a5e48826369c1e255c33ff655ff3fc938e')
 
 

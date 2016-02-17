@@ -108,7 +108,6 @@ def register(request):
                 current_ip =  request.META['HTTP_X_FORWARDED_FOR']
             else:
                 current_ip = request.META['REMOTE_ADDR']
-            print current_ip
             current_userprofile.register_ip = current_ip
             current_userprofile.save()
             return redirect('accounts:set_identity', current_userprofile.id)

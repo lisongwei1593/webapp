@@ -24,10 +24,8 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('webapp.apps.accounts.urls', namespace='accounts')),
-    url(r'^helper/', include('webapp.apps.helper.urls', namespace='helper')),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    url(r'platform/', include('webapp.apps.platform.urls', namespace='platform')),
     url(r'^api/', include('webapp.apps.api.urls', namespace='api')),
     url(r'', include(application.urls)),
 ]

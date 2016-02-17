@@ -46,28 +46,13 @@
                 {% if user.is_authenticated %}
                 <ul class="r login-right">
                     <li class="first-menu">
-                        <a href="{% url 'customer:order_manage' %}">我的账户<span class="jt"></span></a>
-                    </li>
-                    <li class = "first-menu">
-                        <a href="{% url 'helper:helper_index' %}">帮助中心<span class="jt"></span></a>
-                        <ul>
-                            <li><a href="{% url 'helper:helper_index' %}">新手指导</a></li>
-                            <li><a href="{% url 'helper:helper_index' %}">常见问题</a></li>
-                        </ul>
+                        <a href="{% url 'customer:order_manage' %}">我的账户</a>
                     </li>
                 </ul>
                 {% else %}
                 <ul class="r login-right">
                     <li>
                         <a href="{% url 'accounts:login' %}">我的账户</a>
-                    </li>
-                    <li><a href="{% url 'accounts:login' %}">充值</a></li>
-                    <li>
-                        <a href="{% url 'helper:helper_index' %}">帮助中心<span class="jt"></span></a>
-                        <ul>
-                            <li><a href="{% url 'helper:helper_index' %}">新手指导</a></li>
-                            <li><a href="{% url 'helper:helper_index' %}">常见问题</a></li>
-                        </ul>
                     </li>
                 </ul>
                 {% endif %}

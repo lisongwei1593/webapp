@@ -35,7 +35,6 @@ User = get_user_model()
 class SafetyCenterView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
-        print user.email
         rank = 1
         if user.email:
             email = mask_mail_url(user.email)

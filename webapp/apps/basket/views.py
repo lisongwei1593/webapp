@@ -17,7 +17,6 @@ Line = get_model('basket', 'Line')
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue','Category')
 Partner = get_model('partner', 'Partner')
-SystemConfig = get_model('commission', 'SystemConfig')
 
 
 class MoveToMyfavView(APIView):

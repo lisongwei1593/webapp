@@ -60,16 +60,12 @@ INSTALLED_APPS = [
     'webapp',
     'webapp.apps.commission',
     'webapp.apps.public',
-    'webapp.apps.helper',
     'webapp.apps.ad',
-    'webapp.apps.pickup_admin',
-    'webapp.apps.platform',
     'webapp.apps.dashboard.staticpages',
     'webapp.apps.accounts',
     'webapp.apps.customer.safety',
     'webapp.apps.customer.assets',
     'webapp.apps.customer.receiving_address',
-    'webapp.apps.customer.stock',
     'webapp.apps.customer.finance',
 ] + get_core_apps([
     'webapp.apps.address',
@@ -79,12 +75,7 @@ INSTALLED_APPS = [
     'webapp.apps.basket',
     'webapp.apps.dashboard',
     'webapp.apps.dashboard.ad',
-#     'webapp.apps.dashboard.catalogue',
-#     'webapp.apps.dashboard.partners',
     'webapp.apps.dashboard.permission',
-#     'demo.apps.dashboard.pickup_admin',
-#     'demo.apps.dashboard.business',
-#     'demo.apps.dashboard.dataquery',
 ])
 
 

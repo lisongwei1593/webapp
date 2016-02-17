@@ -12,7 +12,6 @@ from django.views import generic
 from django.db.models import Sum, Max, Min
 from oscar.apps.promotions.views import HomeView as CoreHomeView
 from oscar.core.loading import get_model, get_class
-from webapp.apps.catalogue.utils import open_close_date
 
 ProductSearchForm = get_class('dashboard.catalogue.forms','ProductSearchForm')
 Product = get_model('catalogue', 'product')
@@ -23,7 +22,6 @@ ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 RollingAd = get_model('ad', 'RollingAd')
 FlatPage = get_model('staticpages', 'FlatPageNew')
-SystemConfig = get_model('commission', 'SystemConfig')
 
 class HomeView(CoreHomeView):
     template_name = 'promotions/home.html'
@@ -31,17 +29,7 @@ class HomeView(CoreHomeView):
     def get_context_data(self, **kwargs):
         ctx = super(HomeView, self).get_context_data(**kwargs)
         
-        system_config = SystemConfig.objects.first()
         now = datetime.datetime.now().time()
-        open_time = system_config.bank_start_time.strftime('%H:%M')
-        close_time = system_config.bank_end_time.strftime('%H:%M')
-        if system_config.bank_start_time < now and now < system_config.bank_end_time:
-            open_close_msg = u"开市(当日%s-%s)"%(open_time,close_time)
-            ctx['open_or_close'] = True
-        else:
-            open_close_msg = u"闭市(%s-次日%s)"%(close_time,open_time)
-            ctx['open_or_close'] = False
-        ctx['open_close_msg'] = open_close_msg
         new_product_list = Product.objects.filter(is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:10]
         ##shuiji
         reputation_list = Product.objects.filter(selection_reputation = True,is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:11]
@@ -82,8 +70,6 @@ class TodayNewView(TemplateView):
         
         category_list = Category.objects.filter(depth=1).order_by('path')[:10]
         ctx['category_list'] =category_list
-        ctx['open_or_close'] = open_close_date()[0]
-        ctx['open_close_msg'] = open_close_date()[1]
         return ctx
 
 #包括 新品上市,购物须知,公告
@@ -138,7 +124,5 @@ class BrandGatherView(TemplateView):
         category_list = Category.objects.filter(depth=1).order_by('path')[:10]
         ctx['product_list'] = product_list
         ctx['category_list'] =category_list
-        ctx['open_or_close'] = open_close_date()[0]
-        ctx['open_close_msg'] = open_close_date()[1]
         return ctx
     

@@ -17,7 +17,6 @@ from oscar.core.loading import get_class,get_model
 from webapp.apps.catalogue.models import Category
 
 from django.http.response import HttpResponse
-from .utils import open_close_date
 
 SimpleProductSearchHandler = get_class(
     'catalogue.searchproduct_handlers', 'SimpleProductSearchHandler')
@@ -26,7 +25,6 @@ ProductGroup = get_model('catalogue', 'ProductGroup')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 Province = get_model('address', 'Province')
 City = get_model('address', 'City')
-SystemConfig = get_model('commission', 'SystemConfig')
 
 class CustomProductDetailView(CoreProductDetailView):
     template_name = "catalogue/customdetail.html"
@@ -42,17 +40,6 @@ class CustomProductDetailView(CoreProductDetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(CustomProductDetailView, self).get_context_data(**kwargs)
-        system_config = SystemConfig.objects.first()
-        now = datetime.datetime.now().time()
-        open_time = system_config.bank_start_time.strftime('%H:%M')
-        close_time = system_config.bank_end_time.strftime('%H:%M')
-        if system_config.bank_start_time < now and now < system_config.bank_end_time:
-            open_close_msg = u"开市(当日%s-%s)"%(open_time,close_time)
-            ctx['open_or_close'] = True
-        else:
-            open_close_msg = u"闭市(%s-次日%s)"%(close_time,open_time)
-            ctx['open_or_close'] = False
-        ctx['open_close_msg'] = open_close_msg
         provinces = Province.objects.all()
         ctx['provinces']=provinces
         ctx['history_products'] = self.get_history_products()
@@ -153,8 +140,6 @@ class AllSearchProductView(TemplateView):
         category_list = Category.objects.filter(depth=1).order_by('path')[:10]
         ctx['category_list'] =category_list
 
-        ctx['open_or_close'] = open_close_date()[0]
-        ctx['open_close_msg'] = open_close_date()[1]
 
         return ctx
 
