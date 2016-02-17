@@ -130,12 +130,9 @@ class AllSearchProductView(TemplateView):
             self.context_object_name)
         ctx.update(search_context)
 
-        pq = Product.objects.filter(is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).annotate(q=Sum('trade_complete_product__quantity')).order_by('-q')[:7]
-        hotproduct = pq
-        ctx['hotproduct'] = hotproduct
+        ctx['hotproduct'] = []
 
-        history_products = Product.objects.filter(id__in = extract(self.request),opening_date__lte=datetime.datetime.now().date()).order_by('-browse_num')[:7]
-        ctx['history_products'] = history_products
+        ctx['history_products'] = []
 
         category_list = Category.objects.filter(depth=1).order_by('path')[:10]
         ctx['category_list'] =category_list

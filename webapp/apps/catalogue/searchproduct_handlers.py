@@ -185,13 +185,6 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
                     else :
                         attr = ProductAttributeValue.objects.filter(attribute__code=k).filter(value_text=v)
                     qs = qs.filter(attribute_values__in=attr)
-
-        xiaoliang = self.kwargs['xiaoliang']
-        pq = qs.annotate(q=Sum('trade_complete_product__quantity'))
-        if xiaoliang == 'DESC':
-            qs = pq.order_by('-q')
-        if xiaoliang == 'ASC':
-            qs = pq.order_by('q')    
         return qs
     
     def get_count(self):
