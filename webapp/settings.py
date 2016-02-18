@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'compressor',
     'widget_tweaks',
     'ckeditor',
-    'djcelery',
     'ckeditor_uploader',
     'captcha',
     'rest_framework',
