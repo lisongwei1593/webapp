@@ -56,8 +56,6 @@ class Product(AbstractProduct):
     featured_hot = models.BooleanField(default=False, verbose_name=u'主推热卖')
     hot_deals = models.BooleanField(default=False, verbose_name=u'火热促销')
     product_long_image = models.ImageField(upload_to='images/products/%Y/%m/', verbose_name=u'广告长图', blank=True, null=True)
-    product_group = models.ForeignKey('ProductGroup', blank=True, null=True, related_name='product_group',
-                                 verbose_name=u'产品组')
     trader = models.ForeignKey(User, blank=True, null=True, related_name='trader',
                                 verbose_name=u'交易员')
     is_associate = models.BooleanField(default=False, verbose_name=u'是否关联')
@@ -339,119 +337,5 @@ class SearchFilter(models.Model):
         verbose_name = u'搜索属性配置'
         verbose_name_plural = u'搜索属性配置'
 
-
-class ProductGroup(models.Model):
-    name = models.CharField(max_length=200, verbose_name=u'名字')
-    attr = models.ManyToManyField(
-        ProductAttribute, related_name="product_group_attr",
-        blank=True, verbose_name=u'产品组属性')
-
-    class Meta :
-        app_label = 'catalogue'
-        verbose_name = u'产品组'
-        verbose_name_plural = u'产品组'
-
-    def __unicode__(self):
-            return self.name
-    #如果产品组只有一个属性，获取属性列表
-    def get_single_attr_value_list(self):
-        first_attr = self.attr.all().order_by('index')[0]
-        group_attr_value = ProductAttributeValue.objects.filter(attribute=first_attr)
-        group_attr_list = []
-        for attr_value in group_attr_value:
-            list_value = {"text":attr_value.value_text,"href":attr_value.product.get_absolute_url(),"id":attr_value.product.id}
-            group_attr_list.append(list_value)
-        return group_attr_list
-    #如果产品组有两个属性，获取主属性列表
-    def get_first_attr_value_list(self,second_attr_value):
-        key_list = self.get_available_list()
-        first_attr = self.attr.all().order_by('index')[0]
-        group_attr_value = ProductAttributeValue.objects.filter(attribute=first_attr)
-        first_attr_in_list = []#用来去重
-        first_attr_value_list = []
-        for attr_value in group_attr_value:
-            if attr_value.value_text not in first_attr_in_list:
-                first_attr_hash = hash(attr_value.value_text)
-                second_attr_hash = hash(second_attr_value)
-                key = "%d#%d" % (first_attr_hash,second_attr_hash)
-                try:
-                    href = key_list[key]
-                except:
-                    href = attr_value.product.get_absolute_url()
-                first_attr_value = {"text":attr_value.value_text,"href":href,"id":attr_value.product.id}
-                first_attr_value_list.append(first_attr_value)
-                first_attr_in_list.append(attr_value.value_text)
-        return first_attr_value_list
-    #如果产品组有两个属性，获取副属性列表
-    def get_second_attr_value_list(self,first_attr_value):
-        key_list = self.get_available_list()
-        first_attr = self.attr.all().order_by('index')[0]
-        second_attr = self.attr.all().order_by('index')[1]
-        group_attr_value = ProductAttributeValue.objects.filter(attribute=second_attr)
-        attr_value_list = ProductAttributeValue.objects.filter(attribute=first_attr,value_text=first_attr_value)
-        #获取副属性全部选项
-        second_attr_in_list = []#用来去重
-        second_attr_value_list = []
-        for attr_value in group_attr_value:
-            if attr_value.value_text not in second_attr_in_list:
-                first_attr_hash = hash(first_attr_value)
-                second_attr_hash = hash(attr_value.value_text)
-                key = "%d#%d" % (first_attr_hash,second_attr_hash)
-                try:
-                    href = key_list[key]
-                except:
-                    href = ""
-                second_attr_value = {"text":attr_value.value_text,"href":href,"id":attr_value.product.id}
-                second_attr_value_list.append(second_attr_value)
-                second_attr_in_list.append(attr_value.value_text)
-        #判断副属性是否可以点击
-        has_list = []
-        for attr_value in attr_value_list:
-            attr_value = ProductAttributeValue.objects.get(product=attr_value.product,attribute=second_attr).value_text
-            if attr_value not in has_list:
-                has_list.append(attr_value)
-        second_list = []
-        for second_attr_value in second_attr_value_list:
-            if second_attr_value['text'] in has_list:
-                one_attr = {"text":second_attr_value['text'],"has":"true","href":second_attr_value['href'],"id":second_attr_value['id']}
-                second_list.append(one_attr)
-            else:
-                one_attr = {"text":second_attr_value['text'],"has":"","id":second_attr_value['id']}
-                second_list.append(one_attr)
-        return second_list
-
-#     def get_has_list(self,first_attr_value):
-#         first_attr = self.attr.all().order_by('index')[0]
-#         second_attr = self.attr.all().order_by('index')[1]
-#         attr_value_list = ProductAttributeValue.objects.filter(attribute=first_attr,value_text=first_attr_value)
-#         has_list = []
-#         for attr_value in attr_value_list:
-#             second_attr_value = ProductAttributeValue.objects.get(product=attr_value.product,attribute=second_attr).value_text
-#             if second_attr_value not in has_list:
-#                 has_list.append(second_attr_value)
-#         return has_list
-    #获取产品组内所有产品
-    def get_products(self):
-        group_attr = self.attr.all()
-        all_product = []
-        for attr in group_attr:
-            group_attr_value = ProductAttributeValue.objects.filter(attribute=attr)
-            for attr_value in group_attr_value:
-                if attr_value.product not in all_product:
-                    all_product.append(attr_value.product)
-        return all_product
-    #获取当前产品组可用列表
-    def get_available_list(self):
-        key_list = {}
-        all_product = self.get_products()
-        first_attr = self.attr.all().order_by('index')[0]
-        second_attr = self.attr.all().order_by('index')[1]
-        for one_product in all_product:
-            first_attr_hash = hash(ProductAttributeValue.objects.get(attribute=first_attr,product=one_product).value_text)
-            second_attr_hash = hash(ProductAttributeValue.objects.get(attribute=second_attr,product=one_product).value_text)
-            key = "%d#%d"
-            key = key % (first_attr_hash,second_attr_hash)
-            key_list[key]=one_product.get_absolute_url()
-        return key_list
 
 from oscar.apps.catalogue.models import *  # noqa

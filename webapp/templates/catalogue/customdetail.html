@@ -85,15 +85,6 @@
                 </ul>
             </div>
     <ul class="banner-top l">
-        <li>
-            <a href="{% url 'promotions:brandgather_product' %}">品牌汇</a>
-        </li>
-        <li>
-            <a href="{% url 'promotions:today_new_view' %}">新品汇</a>
-        </li>
-        <li style="float:left;background-image: none;font-size:16px;border-right:none">
-            <a href="#">蓝图学院</a>
-        </li>
         <li class="last-child"> 
                <div class="open fix">
                 <div class="l">
@@ -385,7 +376,6 @@
                 </div>
                 <div class="product-des-con-btn">
 			        <button id="buy_button"  type="submit" class="btn btn-lg btn-primary btn-add-to-basket" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">立即购买</button>
-                    <button id="not_allow_button" type="button" style="display:none;cursor: not-allowed;background: #F1F1F1;border: #e2e2e2 solid 1px;color:#66667B;font-size: 14px;" class="btn btn-lg btn-primary btn-add-to-basket">立即购买</button>
                 </div>
 			    </form>
             </div>
@@ -587,97 +577,10 @@ $(function(){
         $(".buy-des-fix ul").animate({top: "-440px"},300);
     });
 })
-//切换提货类型function
-/*
-function change_pickup_type(type){
-	console.log($('#has_product').html());
-	if(type==1){
-		$('#city_selection').hide();
-        $('#not_allow_button').hide();
-        $('#buy_button').show();
-        $('#add_to_basket_button').show();
-	}else if(type==2){
-		var has_product = $('#has_product').html()
-		$('#city_selection').show();
-		if(has_product!="有货"){
-			$('#not_allow_button').show();
-		    $('#buy_button').hide();
-		    $('#add_to_basket_button').hide();
-		}
-	}
-}*/
-//区域选择相关function
-/*
-function select_province(pid,name){
-    $('.ui-city-city').empty();
-    $('#select_city samp').html("请选择市");
-    $(this).addClass("checked").parent("li").siblings().children("a").removeClass("checked");//修改tab内箭头
-    $("#select_city").addClass("curr").siblings().removeClass("curr");//修改当前tab
-    $("#select_city").children("b").addClass("clk").parent().siblings().children().removeClass("clk"); //修改tab内箭头
-    $('#select_province samp').html(name);
-    $(".ui-city-province").hide()
-    $.ajax({
-        type: 'get',
-        url: '../get_province_citys/'+pid,
-        success: function(data){
-        	for(var i=0;i<data.length;i++){
-	        	$('.ui-city-city').append("<li><a onclick='select_city("+data[i][0]+",\""+data[i][1]+"\")'>"+data[i][1]+"</a></li>")
-        	}
-        	$(".ui-city-city li a").click(function(){
-                $(this).addClass("checked").parent("li").siblings().children("a").removeClass("checked");
-            });
-        },
-        error : function(e) {    
-            console.log(e);   
-         }  
-    })
-    $(".ui-city-city").show();
-}
-*/
-/*
-function select_city(cid,name){
-	$('#select_city samp').html(name);
-	address_html = $('#select_province samp').html()+"　"+name;
-	$('.address-placement samp').html(address_html);
-	$.ajax({
-        type: 'post',
-        url: '{% url 'catalogue:city_has_product' %}',
-        data:{cid:cid,pid:{{product.id}},csrfmiddlewaretoken:'{{ csrf_token }}'},
-        success: function(data){
-        	if(data=="True"){
-        		$('#has_product').html('有货')
-        		$('#buy_button').show();
-        		$('#not_allow_button').hide();
-        		$('#add_to_basket_button').show();
-        	}else{
-        		$('#has_product').html('无货')
-        		$('#not_allow_button').show();
-        		$('#buy_button').hide();
-        		$('#add_to_basket_button').hide();
-        	}
-        	$(".ui-city-group").hide();
-        	$(".ui-city-toggle .arr").removeClass("clk");
-        },
-        error : function(e) {    
-            console.log(e);   
-         }  
-    })
-}
-*/
 window.onload = function(){
     $(".product-nav-ul").find("li").eq(-1).children("span").css("display","none");
 };
 $(document).ready(function(){
-	//页面初始时加入购物车和购买按钮的样式
-	/*{% if product.stock_config_product.self_pick_or_express == 1 %}
-		$('#buy_button').hide();
-	    $('#not_allow_button').show();
-	    $('#add_to_basket_button').hide();
-	{% else %}
-		$('#buy_button').show();
-	    $('#not_allow_button').hide();
-	    $('#add_to_basket_button').show();
-	{% endif %}*/
 	$('#add_to_basket_button').click(function() {
 		if({{max_num}}>0){
 		    $('#add_to_basket_form1').submit();
@@ -685,155 +588,6 @@ $(document).ready(function(){
 			alert('超出最大购买数量');
 		}
     })
-	//请求商品价格趋势数据，并生成趋势图
-	$.ajax({
-	    type: 'get',
-	    url: '/tend-view/{{product.id}}/',
-	    success: function(data){
-	    	var chartdata = data.chartdata;
-	    	var jsondata = data.jsondata;
-	    	var tradedata = data.tradedata;
-	    	var commission_data = data.commission_data;
-	    	$('#buy_price').html(commission_data.commission_buy_price?commission_data.commission_buy_price:"-");
-	    	$('#buy_num').html(commission_data.commission_buy_num?commission_data.commission_buy_num:"-");
-	    	$('#sale_price').html(commission_data.commission_sale_price?commission_data.commission_sale_price:"-");
-	    	$('#sale_num').html(commission_data.commission_sale_num?commission_data.commission_sale_num:"-");
-	    	$('#high_price').html(commission_data.high_price?commission_data.high_price:"-");
-	    	$('#low_price').html(commission_data.low_price?commission_data.low_price:"-");
-	    	$(function () {
-	    		trade_complete_container
-	    		$('#trade_complete_container').highcharts({
-	    			title :{
-                        text:'最近两周成交趋势',
-                        verticalAlign: 'bottom',
-                        y:10,
-                        style: {
-                            'font-size':'12px'
-                        }
-                    },
-                    lang: {
-                        noData: "没有近期数据"
-                    },
-                    noData: {
-                        style: {
-                            fontWeight: 'bold',
-                            fontSize: '15px',
-                            color: '#303030'
-                        }
-                    },
-                    chart: {
-                        type: 'line',
-                        marginBottom: 30
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    xAxis: {
-                        type: 'category', 
-                        labels:{
-                            enabled:false
-                        },
-                        title: {
-                            text: null
-                            //align: 'center'
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: null
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
-                    tooltip: {
-                        xDateFormat: '<b>%Y-%m-%d</b>',
-                        headerFormat: 'sd',
-                        formatter: function() {
-                            return '<b>'+this.point.name+'</b><br/>成交量:'+this.point.y;
-                        }
-                    },
-                    series: [{
-                        name: 'Tokyo',
-                        data:tradedata
-                    }]
-	    		})
-	    		/*
-	            $('#price_tend_container').highcharts({
-	                title :{
-	                    text:'最近两周价格趋势',
-	                    verticalAlign: 'bottom',
-	                    y:10,
-	                    style: {
-	                    	'font-size':'12px'
-	                    }
-	                },
-	                lang: {
-	                    noData: "没有近期数据"
-	                },
-	                noData: {
-	                    style: {
-	                        fontWeight: 'bold',
-	                        fontSize: '15px',
-	                        color: '#303030'
-	                    }
-	                },
-	                chart: {
-	                    type: 'line',
-	                    marginBottom: 30
-	                },
-	                legend: {
-	                    enabled: false
-	                },
-	                credits: {
-	                    enabled: false
-	                },
-	                xAxis: {
-	                    type: 'category', 
-	                    labels:{
-	                        enabled:false
-	                    },
-	                    title: {
-	                        text: null
-	                        //align: 'center'
-	                    }
-	                },
-	                yAxis: {
-	                    title: {
-	                        text: null
-	                    },
-	                    plotLines: [{
-	                        value: 0,
-	                        width: 1,
-	                        color: '#808080'
-	                    }]
-	                },
-	                tooltip: {
-	                    xDateFormat: '<b>%Y-%m-%d</b>',
-	                    headerFormat: 'sd',
-	                    formatter: function() {
-	                        return '<b>'+this.point.name+'</b><br/>最高价:'+jsondata[this.point.name].max
-	                               +'<br/>成交价:'+this.point.y+'<br/>最低价:'+jsondata[this.point.name].min;
-	                    }
-	                },
-	                series: [{
-	                    name: 'Tokyo',
-	                    data:chartdata
-	                }]
-	            });
-	    		*/
-	        });
-	    },
-	    dataType: 'json',
-	    error : function(e) {    
-	        console.log(e);   
-	     }    
-	});
 	
     // 图片上下滚动
     var count = $("#imageMenu li").length - 5; /* 显示 6 个 li标签内容 */
@@ -1019,16 +773,6 @@ $(document).ready(function(){
         $(".border-type").hide();
     });
 
-    //收益显示
-    $.get("{% url 'customer:getuserincome' %}",function(result,status){
-    	if(result.yesterday_icome>=0){
-        	$("#add").html("+" + result.yesterday_icome.toFixed(2));
-        	$("#add1").html("+" + result.yesterday_icome.toFixed(2));
-        	}else{
-        		$("#add").html(result.yesterday_icome.toFixed(2));
-            	$("#add1").html(result.yesterday_icome.toFixed(2));	
-        	}
-    });
     //我的收益
     $("#shouyi-li").hover(function () {
     	  $.ajax({

@@ -1,6 +1,6 @@
 #coding=utf-8
 from oscar.apps.catalogue.admin import *  # noqa
-from .models import SearchFilter,ProductAttribute,ProductGroup
+from .models import SearchFilter,ProductAttribute
 
 admin.site.unregister(ProductAttribute,)
 
@@ -34,4 +34,3 @@ class ProductGroupAdmin(admin.ModelAdmin):
 
 admin.site.register(SearchFilter,SearchFilterUserMoneyChangeAdmin)
 admin.site.register(ProductAttribute, ProductAttributeAdmin)
-admin.site.register(ProductGroup, ProductGroupAdmin)

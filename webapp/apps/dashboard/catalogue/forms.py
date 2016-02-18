@@ -22,10 +22,7 @@ from oscar.core.loading import get_model
 
 Product = get_model('catalogue', 'Product')
 ProductImage = get_model('catalogue', 'ProductImage')
-StockProductConfig = get_model('commission', 'StockProductConfig')
-StockEnter = get_model('platform', 'StockEnter')
 StockRecord = get_model('partner', 'StockRecord')
-
 
 class ProductForm(CoreProductForm):
     FIELD_FACTORIES = {
@@ -172,38 +169,9 @@ class LocalStockRecordFormSet(LocalBaseStockRecordFormSet):
                     _("At least one stock record must be set to a partner that"
                       " you're associated with."))
 
-
-class ProductConfigForm(forms.ModelForm):
-    class Meta:
-        model = StockProductConfig
-        fields = [
-             'quote','max_buy_num','max_deal_num','self_pick_or_express','opening_price','once_max_num','max_num','pickup_price','express_price','scomm','pickup_addr','sale_num'
-             ,'min_price','ud_up_range','ud_down_range','min_bnum','min_snum','distribution_pickup_addr','pickup_addr']
-
-class StockEnterForm(forms.ModelForm):
-#     def __init__(self, product_class, user, *args, **kwargs):
-#         # The user kwarg is not used by stock StockRecordForm. We pass it
-#         # anyway in case one wishes to customise the partner queryset
-#         initial = kwargs.get('initial', {})
-#         initial['user'] = user
-#         kwargs['initial'] = initial
-#         super(StockEnterForm, self).__init__(*args, **kwargs)
-    class Meta:
-        model = StockEnter
-        fields = [
-             'user','product','quantity','desc']
-
 LocalBaseProductRecommendationFormSet = inlineformset_factory(
     Product, ProductRecommendation, form=ProductRecommendationForm,
     extra=7, fk_name="primary")
-
-LocalBaseProductConfigFormSet = inlineformset_factory(
-    Product, StockProductConfig, form=ProductConfigForm,max_num=1,can_delete=False)
-#
-# StockEnterFormSet = inlineformset_factory(
-#     Product, StockEnter, form=StockEnterForm,extra=1,can_delete=False)
-
-
 
 
 class LocalProductRecommendationFormSet(LocalBaseProductRecommendationFormSet):
@@ -211,23 +179,6 @@ class LocalProductRecommendationFormSet(LocalBaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         super(LocalProductRecommendationFormSet, self).__init__(*args, **kwargs)
 
-class LocalProductConfigFormSet(LocalBaseProductConfigFormSet):
-
-    def __init__(self, product_class, user, *args, **kwargs):
-        super(LocalProductConfigFormSet, self).__init__(*args, **kwargs)
-
-# class LocalStockEnterFormSet(StockEnterFormSet):
-#
-#     def __init__(self, product_class, user, *args, **kwargs):
-#         self.user=user
-#         self.product_class = product_class
-#         super(LocalStockEnterFormSet, self).__init__(*args, **kwargs)
-#
-#     def _construct_form(self, i, **kwargs):
-#         kwargs['product_class'] = self.product_class
-#         kwargs['user'] = self.user
-#         return super(LocalStockEnterFormSet, self)._construct_form(
-#             i, **kwargs)
 
 class ProductSearchForm(CoreProductSearchForm):
     upc = forms.CharField(max_length=16, required=False, label=_(u'商品代码'))

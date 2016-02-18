@@ -3,7 +3,6 @@ from oscar.apps.catalogue.reviews.app import application as reviews_app
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 
-from webapp.apps.catalogue.views import get_province_citys,city_has_product
 
 
 class BaseCatalogueApplication(Application):
@@ -30,8 +29,6 @@ class BaseCatalogueApplication(Application):
             url(r'^ranges/(?P<slug>[\w-]+)/$',
                 self.range_view.as_view(), name='range'),
             url(r'^searchproducts/$',self.all_product_view.as_view(),name='allproducts'),
-            url(r'^get_province_citys/(?P<pid>\d+)/$', get_province_citys, name='get_province_citys'),
-            url(r'^city_has_product/$', city_has_product, name='city_has_product'),
                         ]
         return self.post_process_urls(urlpatterns)
 

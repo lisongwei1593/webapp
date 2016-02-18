@@ -6,7 +6,6 @@ import traceback
 import datetime
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.db.models import Sum
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
@@ -21,7 +20,6 @@ from django.http.response import HttpResponse
 SimpleProductSearchHandler = get_class(
     'catalogue.searchproduct_handlers', 'SimpleProductSearchHandler')
 Product = get_model('catalogue', 'product')
-ProductGroup = get_model('catalogue', 'ProductGroup')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 Province = get_model('address', 'Province')
 City = get_model('address', 'City')
@@ -49,42 +47,7 @@ class CustomProductDetailView(CoreProductDetailView):
         ctx['category_list'] = category_list
         product = self.get_object()
         ctx['max_num'] = 1989
-        product_group = self.get_object().product_group
-        if product_group:
-            product_group_attr_count = product_group.attr.count()
-            if product_group_attr_count == 2:
-                try:
-                    first_attr = product_group.attr.all().order_by('index')[0]
-                    second_attr = product_group.attr.all().order_by('index')[1]
-                    cur_first_attr_value = ProductAttributeValue.objects.get(attribute=first_attr,product=self.get_object()).value_text
-                    cur_second_attr_value = ProductAttributeValue.objects.get(attribute=second_attr,product=self.get_object()).value_text
-                    first_attr_value_list = product_group.get_first_attr_value_list(cur_second_attr_value)
-                    second_attr_value_list = product_group.get_second_attr_value_list(cur_first_attr_value)
-                    ctx['first_attr'] = first_attr
-                    ctx['second_attr'] = second_attr
-                    ctx['cur_first_attr_value'] = cur_first_attr_value
-                    ctx['cur_second_attr_value'] = cur_second_attr_value
-                    ctx['first_attr_value_list'] = first_attr_value_list
-                    ctx['second_attr_value_list'] = second_attr_value_list
-                except:
-                    traceback.print_exc()
-                    return ctx
-                return ctx
-            elif product_group_attr_count == 1:
-                try:
-                    first_attr = product_group.attr.all().order_by('index')[0]
-                    cur_first_attr_value = ProductAttributeValue.objects.get(attribute=first_attr,product=self.get_object()).value_text
-                    first_attr_value_list = product_group.get_single_attr_value_list()
-                    ctx['first_attr'] = first_attr
-                    ctx['cur_first_attr_value'] = cur_first_attr_value
-                    ctx['first_attr_value_list'] = first_attr_value_list
-                except:
-                    return ctx
-                return ctx
-            elif product_group_attr_count == 0:
-                return ctx
-        else:
-            return ctx
+        return ctx
 
     ###浏览量+1
     def get(self,request,*args,**kwargs):
@@ -139,30 +102,6 @@ class AllSearchProductView(TemplateView):
 
 
         return ctx
-
-#===============================================================================
-#     def post(self,request,*args,**kwargs):
-#         data = request.POST
-#         search_q = data.get('q','')
-#         qs = Product.objects.filter(is_on_shelves = True)
-#         ctx = {}
-#         # 查询商品名称 ，编号 ，描述，类别 ，分类，
-#         try:
-#             if search_q :
-#                 qs = qs.filter(Q(title__icontains=search_q)|Q(description__icontains=search_q)
-#                                |Q(upc__icontains= search_q)|Q(categories__name__icontains = search_q)
-#                                |Q(product_class__name__icontains = search_q)
-#                                )
-#
-#             self.object_list = qs.all()
-#         except Exception as e:
-#             pass
-#
-#         ctx = {'products': self.object_list ,}
-#         resp = render(request,'catalogue/product-list.html',ctx)
-#
-#         return resp
-#===============================================================================
 
 
 def get_province_citys(request,pid):

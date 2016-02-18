@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'webapp.apps.dashboard',
     'webapp.apps.dashboard.ad',
     'webapp.apps.dashboard.permission',
+    'webapp.apps.dashboard.catalogue',
 ])
 
 

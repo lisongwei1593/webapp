@@ -69,15 +69,7 @@
                     <li><a href="#product_images" data-toggle="tab">{% trans 'Images' %}</a></li>
                 {% endif %}
                 {% if not product.is_parent %}
-                    <li><a href="#product_stock" data-toggle="tab">设置会员单位</a></li>
-                {% endif %}
-                <li><a href="#product_config" data-toggle="tab">商品配置</a></li>
-                <li><a href="#stock_enter_list" data-toggle="tab">库转查询</a></li>
-            <!--     {% if user.is_staff and not parent %}
-                    <li><a href="#child_products" data-toggle="tab">{% trans 'Variants' %}</a></li>
-                {% endif %} -->
-                {% if not parent %}
-                    <li><a href="#product_recommended" data-toggle="tab">{% trans 'Upselling' %}</a></li>
+                    <li><a href="#product_stock" data-toggle="tab">{% trans 'Stock and pricing' %}</a></li>
                 {% endif %}
             </ul>
             <div class="tab-content">
@@ -92,7 +84,6 @@
                                 {% for field in form.hidden_fields %}
                                     {{ field }}
                                 {% endfor %}
-
                                 {% for field in form.visible_fields %}
                                     {% if 'attr' not in field.id_for_label %}
                                         {% include 'dashboard/partials/form_field.html' with field=field %}

@@ -31,8 +31,6 @@ class HomeView(CoreHomeView):
         
         now = datetime.datetime.now().time()
         new_product_list = Product.objects.filter(is_on_shelves=True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:10]
-        ##shuiji
-        reputation_list = Product.objects.filter(selection_reputation = True,is_on_shelves = True,opening_date__lte=datetime.datetime.now().date()).order_by('-date_updated')[:11]
 
         #新品上市消息
         ctx['news_product'] = FlatPage.objects.filter(category=3).order_by('-created_datetime')[:7]
@@ -45,7 +43,6 @@ class HomeView(CoreHomeView):
         
         ctx['new_product_list'] = new_product_list
 
-        ctx['reputation_list'] = reputation_list
         ctx['category_list'] = category_list
         ad_list = RollingAd.objects.filter(valid=True)
         ctx['rolling_ad_list'] = ad_list.filter(position='home_ad') # 轮播广告 by lwj 修改：包括页面其它广告
@@ -110,19 +107,5 @@ class NewsProductDetailView(TemplateView):
             ctx['news_product_detail'] = FlatPage.objects.get(pk=kwargs.get("pk"))
         except:
             pass
-        return ctx
-    
-
-#品牌汇
-class BrandGatherView(TemplateView):
-    template_name = 'promotions/brand_gather.html'
-    
-    def get_context_data(self, **kwargs):
-        ctx = super(BrandGatherView, self).get_context_data(**kwargs)
-        
-        product_list = Product.objects.filter(is_on_shelves=True,opening_date__lte=datetime.datetime.now().date())[:20]
-        category_list = Category.objects.filter(depth=1).order_by('path')[:10]
-        ctx['product_list'] = product_list
-        ctx['category_list'] =category_list
         return ctx
     

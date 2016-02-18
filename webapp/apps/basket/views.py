@@ -19,17 +19,6 @@ Category = get_model('catalogue','Category')
 Partner = get_model('partner', 'Partner')
 
 
-class MoveToMyfavView(APIView):
-    def get(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-
-        ln = Line.objects.get(id=pk)
-        WishList = get_model('wishlists', 'WishList')
-        WishList.objects.get_or_create(owner=request.user)[0].add(ln.product)
-        ln.delete()
-
-        return redirect('basket:summary')
-
 def buy_product(request, pk):
     try:
         product = Product.objects.get(id=pk)

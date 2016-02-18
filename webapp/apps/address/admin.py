@@ -18,13 +18,8 @@ class DistrictAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug_name', 'city')
 
 
-class ReceivingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'consignee', 'province', 'city', 'district',
-                    'address', 'mobile_phone', 'telephone', 'is_default')
-    search_fields = ('user', 'consignee', 'city')
-
-
 admin.site.register(Province, ProvinceAdmin)
 admin.site.register(City, CityAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.unregister(get_model('address', 'useraddress'))
+admin.site.unregister(get_model('address', 'Country'))
