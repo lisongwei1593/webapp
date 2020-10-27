@@ -9,7 +9,7 @@ argparse==1.2.1
 billiard==3.3.0.21
 celery==3.1.19
 cffi==1.2.1
-cryptography==1.0.2
+cryptography==3.2
 decorator==4.0.2
 django-appconf==1.0.1
 django-ckeditor==5.0.2
